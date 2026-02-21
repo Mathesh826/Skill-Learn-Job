@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import Navbar from "../components/navbar";
 import OurServices from "../components/OurServices";
 import WhyChooseUs from "../components/WhyChooseUs";
-import Sidebar from "../components/SideBar";
+import Sidebar from "../components/Sidebar";
 
 
 
