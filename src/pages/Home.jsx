@@ -3,10 +3,10 @@ import Swal from "sweetalert2";
 
 import AutoShowcase from "../components/AutoShowcase";
 import Footer from "../components/Footer";
-import Navbar from "../components/navbar";
 import OurServices from "../components/OurServices";
 import WhyChooseUs from "../components/WhyChooseUs";
 import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 
 
 
@@ -43,7 +43,7 @@ function Home() {
 
   return (
     <>
-      <Navbar />
+      <Navbar/>
       <Sidebar/>
       
       <AutoShowcase />
