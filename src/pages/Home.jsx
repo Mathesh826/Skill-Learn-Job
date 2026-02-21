@@ -6,7 +6,8 @@ import Footer from "../components/Footer";
 import Navbar from "../components/navbar";
 import OurServices from "../components/OurServices";
 import WhyChooseUs from "../components/WhyChooseUs";
-import Sidebar from "../components/SideBar";
+import SideBar from "../components/SideBar";
+
 
 
 function Home() {
@@ -43,7 +44,7 @@ function Home() {
   return (
     <>
       <Navbar />
-      <Sidebar/>
+      <SideBar/>
       <AutoShowcase />
       <WhyChooseUs />
       <OurServices />
