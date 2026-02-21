@@ -3,7 +3,7 @@ import { FaUserCircle, FaSearch, FaBuilding, FaCog } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import LoginPanel from "./LoginPanel";
 
-function SideBar() {
+function Sidebar() {
   const [openLogin, setOpenLogin] = useState(false);
   const navigate = useNavigate();
 
@@ -61,4 +61,4 @@ function SideBar() {
   );
 }
 
-export default SideBar;
+export default Sidebar;
