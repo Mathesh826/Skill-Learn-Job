@@ -5,7 +5,7 @@ import AutoShowcase from "../components/AutoShowcase";
 import Footer from "../components/Footer";
 import Navbar from "../components/navbar";
 import OurServices from "../components/OurServices";
-import SideBar from "../components/Sidebar";
+import SideBar from "../components/SideBar";
 import WhyChooseUs from "../components/WhyChooseUs";
 
 function Home() {
