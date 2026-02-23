@@ -5,7 +5,7 @@ import AutoShowcase from "../components/AutoShowcase";
 import Footer from "../components/Footer";
 import OurServices from "../components/OurServices";
 import WhyChooseUs from "../components/WhyChooseUs";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/Sidebar_module";
 import Navbar from "../components/Navbar";
 
 
