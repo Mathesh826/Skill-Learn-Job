@@ -78,7 +78,7 @@ const RecruiterLogin = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/recruiter/login", {
+      const res = await fetch("https://skill-learn-job.onrender.com/recruiter/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData)
@@ -133,7 +133,7 @@ const RecruiterLogin = () => {
       return showAlert("error", "Company verification failed");
 
     try {
-      const res = await fetch("http://localhost:5000/recruiter/register", {
+      const res = await fetch("https://skill-learn-job.onrender.com/recruiter/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(registerData)

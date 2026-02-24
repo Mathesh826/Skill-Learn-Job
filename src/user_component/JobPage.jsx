@@ -18,7 +18,7 @@ export default function JobPage({ onClose }) {
   /* ================= fetch jobs ================= */
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/get-matching-jobs/${userId}`)
+      .get(`https://skill-learn-job.onrender.com/get-matching-jobs/${userId}`)
       .then((res) => {
         const sorted = res.data.sort(
           (a, b) => new Date(b.created_at) - new Date(a.created_at)
@@ -62,7 +62,7 @@ export default function JobPage({ onClose }) {
     formData.append("job_id", job.id);
     formData.append("user_id", userId);
 
-    await axios.post("http://localhost:5000/apply-job", formData);
+    await axios.post("https://skill-learn-job.onrender.com/apply-job", formData);
     alert("Applied Successfully!");
   };
 
@@ -117,7 +117,7 @@ export default function JobPage({ onClose }) {
             {/* ===== OLD CONTENT (unchanged) ===== */}
             <div className="job-left">
               <img
-                src={`http://localhost:5000/uploads/${job.logo}`}
+                src={`https://skill-learn-job.onrender.com/uploads/${job.logo}`}
                 alt=""
               />
 

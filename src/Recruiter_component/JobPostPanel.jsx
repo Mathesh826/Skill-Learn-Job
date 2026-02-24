@@ -25,7 +25,7 @@ export default function JobPostPanel({ open, onClose, recruiter }) {
 
     const formData = new FormData(e.target);
 
-    const res = await fetch("http://localhost:5000/post-job", {
+    const res = await fetch("https://skill-learn-job.onrender.com/post-job", {
       method: "POST",
       body: formData,
     });

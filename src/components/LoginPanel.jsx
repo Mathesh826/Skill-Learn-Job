@@ -207,7 +207,7 @@ const LoginPanel = ({ isOpen, onClose }) => {
     if (!canRegister) return;
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/register", {
+      const res = await fetch("https://skill-learn-job.onrender.com/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -247,7 +247,7 @@ const LoginPanel = ({ isOpen, onClose }) => {
     if (!canLogin) return;
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/login", {
+      const res = await fetch("https://skill-learn-job.onrender.com/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -54,7 +54,7 @@ const ProfileCreation = ({ onClose }) => {
     setForm(prev => ({ ...prev, user_id: userId }));
 
     try {
-      const res = await fetch(`http://127.0.0.1:5000/user/${userId}`);
+      const res = await fetch(`https://skill-learn-job.onrender.com/user/${userId}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -189,7 +189,7 @@ const ProfileCreation = ({ onClose }) => {
     if (form.image_path) fd.append("image_path", form.image_path);
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/create-profile", {
+      const res = await fetch("https://skill-learn-job.onrender.com/create-profile", {
         method: "POST",
         body: fd
       });

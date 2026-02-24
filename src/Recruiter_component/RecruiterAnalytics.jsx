@@ -24,7 +24,7 @@ export default function RecruiterAnalytics() {
 
   /* ✅ FETCH REAL DATA */
   useEffect(() => {
-    fetch("http://localhost:5000/recruiter-analytics")
+    fetch("https://skill-learn-job.onrender.com/recruiter-analytics")
       .then(res => res.json())
       .then(data => {
         setStatusData(data.status || []);

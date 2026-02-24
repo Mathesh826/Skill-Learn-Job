@@ -39,7 +39,7 @@ const ProfileScoreSidebar = () => {
     if (!userId) return;
 
     try {
-      const res = await fetch(`http://127.0.0.1:5000/user/${userId}`);
+      const res = await fetch(`https://skill-learn-job.onrender.com/user/${userId}`);
       const data = await res.json();
       if (res.ok) setScore(calculateScore(data));
     } catch (err) {
