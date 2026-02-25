@@ -32,7 +32,9 @@ def get_db():
 def home():
     return "Skill Nexus Backend Running 🚀"
 
-
+@app.route("/test")
+def test():
+    return "API OK"
 # ======================================================
 # ✅ USER REGISTER
 # ======================================================
@@ -310,5 +312,3 @@ def get_jobs():
 # ✅ RUN (Local only)
 # ======================================================
 
-if __name__ == "__main__":
-    app.run(debug=True)
