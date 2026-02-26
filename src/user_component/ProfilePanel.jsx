@@ -45,7 +45,7 @@ const ProfileCreation = ({ onClose }) => {
 
   /* ---------------- FETCH USER ---------------- */
   const fetchUser = async () => {
-    const userId = localStorage.getItem("user_Id");
+    const userId = localStorage.getItem("user_id");
     if (!userId) {
       Swal.fire("Error","User ID missing. Please login again.","error");
       return;
