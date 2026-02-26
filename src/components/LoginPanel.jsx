@@ -264,20 +264,30 @@ const LoginPanel = ({ isOpen, onClose }) => {
       if (!res.ok) return errorToast(data.message || "Invalid credentials");
 
       if (data.user?.id) {
-  localStorage.setItem("userId", data.user.id);
-  console.log("Saved ID =", data.user.id);
-}
+        console.log("USER ID STORED =", data.user.id);
+        localStorage.setItem("userId", data.user.id); // ⭐ FIXED
+      }
 
-successToast("Login successful");
+      if (data.username) {
+        localStorage.setItem("username", data.username);
+      }
 
-setTimeout(() => {
-  setShowLoader(true);
+      // 1️⃣ Show toast (5 sec)
+      successToast("Login successful");
 
-  setTimeout(() => {
-    navigate("/userpage");   // ⭐ use navigate
-  }, 2000);
+      // 2️⃣ After toast disappears → show loader
+      setTimeout(() => {
+        setShowLoader(true);
 
-}, 1500);
+        // disable closing while loading
+        document.body.style.pointerEvents = "none";
+
+        // 3️⃣ Loader runs 5 sec → redirect
+        setTimeout(() => {
+          navigate("/userpage");
+        }, 7000);
+
+      }, 2500); // wait for toast to finish
 
     } catch (err) {
       errorToast("Server connection failed");
