@@ -37,24 +37,33 @@ const ProfileCreation = ({ onClose }) => {
     skills: [],
     role: [],
     roleInput: "",
-    certificates: [],
-    image_path: null,
     previewImage: null
   });
 
   const [filteredRoles, setFilteredRoles] = useState([]);
 
-  /* ---------------- FETCH USER ---------------- */
+  /* =======================================================
+     ✅ FETCH USER (users + profile merge)
+  ======================================================= */
   const fetchUser = async () => {
 
     const userId = localStorage.getItem("user_id");
 
+    if (!userId) {
+      Swal.fire("Error", "User ID missing. Please login again.", "error");
+      return;
+    }
+
     try {
 
-      const userRes = await fetch(`https://skill-learn-job.onrender.com/get-user/${userId}`);
+      const userRes = await fetch(
+        `https://skill-learn-job.onrender.com/get-user/${userId}`
+      );
       const userData = await userRes.json();
 
-      const profileRes = await fetch(`https://skill-learn-job.onrender.com/get-profile/${userId}`);
+      const profileRes = await fetch(
+        `https://skill-learn-job.onrender.com/get-profile/${userId}`
+      );
       const profileData = await profileRes.json();
 
       setForm(prev => ({
@@ -73,9 +82,10 @@ const ProfileCreation = ({ onClose }) => {
       }));
 
       setSaved(!!profileData.saved);
+      setEditMode(false);
 
     } catch {
-      Swal.fire("Error","Server connection failed","error");
+      Swal.fire("Error", "Server connection failed", "error");
     } finally {
       setLoading(false);
     }
@@ -85,72 +95,96 @@ const ProfileCreation = ({ onClose }) => {
     fetchUser();
   }, []);
 
-  /* ---------------- HANDLE FILE (FIXED) ---------------- */
-  const handleFile = (e) => {
-
-    if (!editMode) return;
-
-    const { name, files } = e.target;
-
-    if (name === "certificates") {
-      setForm(prev => ({
-        ...prev,
-        certificates: Array.from(files)
-      }));
-    }
-
-    if (name === "image_path") {
-      const file = files[0];
-
-      setForm(prev => ({
-        ...prev,
-        image_path: file,
-        previewImage: URL.createObjectURL(file)
-      }));
-    }
-  };
-
-  /* ---------------- HANDLE CHANGE ---------------- */
+  /* ---------------- INPUT CHANGE ---------------- */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  /* ---------------- SAVE PROFILE (FormData) ---------------- */
+  /* ---------------- CHIP HELPERS ---------------- */
+  const addChip = (field, value) => {
+    if (!value.trim() || !editMode) return;
+
+    setForm(prev => ({
+      ...prev,
+      [field]: [...prev[field], value.trim()]
+    }));
+  };
+
+  const removeChip = (field, value) => {
+    if (!editMode) return;
+
+    setForm(prev => ({
+      ...prev,
+      [field]: prev[field].filter(v => v !== value)
+    }));
+  };
+
+  /* ---------------- ROLE TYPEAHEAD ---------------- */
+  const handleRoleInput = (e) => {
+    if (!editMode) return;
+
+    const val = e.target.value;
+    setForm(prev => ({ ...prev, roleInput: val }));
+
+    if (!val) return setFilteredRoles([]);
+
+    setFilteredRoles(
+      ALL_ROLES.filter(
+        r => r.toLowerCase().includes(val.toLowerCase()) &&
+        !form.role.includes(r)
+      )
+    );
+  };
+
+  const selectRole = (role) => {
+    if (!editMode) return;
+
+    setForm(prev => ({
+      ...prev,
+      role: [...prev.role, role],
+      roleInput: ""
+    }));
+
+    setFilteredRoles([]);
+  };
+
+  /* =======================================================
+     ✅ FIXED SAVE (ONLY JSON SAFE DATA)
+  ======================================================= */
   const handleSubmit = async () => {
 
     if (saving) return;
 
     setSaving(true);
 
-    const fd = new FormData();
-
-    fd.append("user_id", form.user_id);
-    fd.append("name", form.name);
-    fd.append("phone", form.phone);
-    fd.append("email", form.email);
-    fd.append("father_name", form.father_name);
-    fd.append("gender", form.gender);
-    fd.append("dob", form.dob);
-
-    fd.append("education", JSON.stringify(form.education));
-    fd.append("skills", JSON.stringify(form.skills));
-    fd.append("role", JSON.stringify(form.role));
-
-    if (form.image_path) fd.append("image_path", form.image_path);
-    form.certificates.forEach(f => fd.append("certificates", f));
-
     try {
+
+      const payload = {
+        user_id: form.user_id,
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        father_name: form.father_name,
+        gender: form.gender,
+        dob: form.dob,
+        education: form.education,
+        skills: form.skills,
+        role: form.role,
+        image_path: form.previewImage || ""
+      };
 
       const res = await fetch(
         `https://skill-learn-job.onrender.com/save-profile/${form.user_id}`,
         {
           method: "POST",
-          body: fd
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         }
       );
 
-      if (!res.ok) throw new Error();
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
 
       Swal.fire({
         icon: "success",
@@ -160,16 +194,24 @@ const ProfileCreation = ({ onClose }) => {
       });
 
       await fetchUser();
+      emitProfileUpdate();
       setTimeout(onClose, 600);
 
     } catch {
-      Swal.fire("Error","Profile not saved","error");
+      Swal.fire("Error", "Profile not saved", "error");
     } finally {
       setSaving(false);
     }
   };
 
+  const toggleEdit = () => {
+    if (!saved) return setEditMode(true);
+    setEditMode(prev => !prev);
+  };
+
   if (loading) return <p>Loading profile…</p>;
+
+  /* ================= UI UNCHANGED ================= */
 
   return (
     <div className="profile-overlay">
@@ -303,6 +345,8 @@ const ProfileCreation = ({ onClose }) => {
         )}
       </div>
     </div>
-);
-}
+
+  );
+};
+
 export default ProfileCreation;
