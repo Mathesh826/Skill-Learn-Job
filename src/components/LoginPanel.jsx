@@ -274,7 +274,7 @@ const LoginPanel = ({ isOpen, onClose }) => {
         setShowLoader(true);
 
         setTimeout(() => {
-          navigate("/UserPage");   // ⭐ use navigate
+          navigate("/userpage");   // ⭐ use navigate
         }, 2000);
 
       }, 1500);
