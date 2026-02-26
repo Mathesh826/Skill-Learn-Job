@@ -9,14 +9,15 @@ const emitProfileUpdate = () => {
 };
 
 const ALL_ROLES = [
-  "Administrator", "Android Developer", "AI Engineer", "Application Support",
-  "Automation Tester", "Backend Developer", "Business Analyst", "Cloud Engineer",
-  "Content Writer", "Data Analyst", "Data Engineer", "Database Administrator",
-  "DevOps Engineer", "Frontend Developer", "Fullstack Developer", "HR",
-  "Intern", "Java Developer", "Project Manager"
+  "Administrator","Android Developer","AI Engineer","Application Support",
+  "Automation Tester","Backend Developer","Business Analyst","Cloud Engineer",
+  "Content Writer","Data Analyst","Data Engineer","Database Administrator",
+  "DevOps Engineer","Frontend Developer","Fullstack Developer","HR",
+  "Intern","Java Developer","Project Manager"
 ];
 
 const ProfileCreation = ({ onClose }) => {
+
   const panelRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
@@ -43,42 +44,52 @@ const ProfileCreation = ({ onClose }) => {
 
   const [filteredRoles, setFilteredRoles] = useState([]);
 
-  /* ---------------- FETCH USER ---------------- */
+  /* =======================================================
+     ✅ FIXED FETCH USER (users + profile merge)
+  ======================================================= */
   const fetchUser = async () => {
+
     const userId = localStorage.getItem("user_id");
+
     if (!userId) {
       Swal.fire("Error", "User ID missing. Please login again.", "error");
       return;
     }
 
-
-
-    setForm(prev => ({ ...prev, user_id: userId }));
-
     try {
-      fetch(`https://skill-learn-job.onrender.com/get-profile/${userId}`)
-      const data = await res.json();
 
-      if (!res.ok) {
-        Swal.fire("Error", data.message || "Failed to fetch user", "error");
-        return;
-      }
+      // ⭐ users table
+      const userRes = await fetch(
+        `https://skill-learn-job.onrender.com/get-user/${userId}`
+      );
+      const userData = await userRes.json();
+
+      // ⭐ profile table
+      const profileRes = await fetch(
+        `https://skill-learn-job.onrender.com/get-profile/${userId}`
+      );
+      const profileData = await profileRes.json();
 
       setForm(prev => ({
         ...prev,
-        name: data.name || "",
-        phone: data.phone || "",
-        email: data.email || "",
-        father_name: data.father_name || "",
-        gender: data.gender || "",
-        dob: data.dob || "",
-        education: data.education || [],
-        skills: data.skills || [],
-        role: data.role || [],
-        previewImage: data.image_path || null
+        user_id: userId,
+
+        // users table auto fill
+        name: userData.name || "",
+        phone: userData.phone || "",
+        email: userData.email || "",
+
+        // profile table
+        father_name: profileData.father_name || "",
+        gender: profileData.gender || "",
+        dob: profileData.dob || "",
+        education: profileData.education || [],
+        skills: profileData.skills || [],
+        role: profileData.role || [],
+        previewImage: profileData.image_path || null
       }));
 
-      setSaved(!!data.saved);
+      setSaved(!!profileData.saved);
       setEditMode(false);
 
     } catch {
@@ -148,7 +159,7 @@ const ProfileCreation = ({ onClose }) => {
     setFilteredRoles(
       ALL_ROLES.filter(
         r => r.toLowerCase().includes(val.toLowerCase()) &&
-          !form.role.includes(r)
+        !form.role.includes(r)
       )
     );
   };
@@ -165,37 +176,25 @@ const ProfileCreation = ({ onClose }) => {
     setFilteredRoles([]);
   };
 
-  /* ---------------- SAVE PROFILE ---------------- */
+  /* =======================================================
+     ✅ FIXED SAVE (JSON only, no FormData mismatch)
+  ======================================================= */
   const handleSubmit = async () => {
+
     if (saving) return;
 
     setSaving(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    const fd = new FormData();
-
-    Object.entries({
-      user_id: form.user_id,
-      name: form.name,
-      phone: form.phone,
-      email: form.email,
-      father_name: form.father_name,
-      gender: form.gender,
-      dob: form.dob
-    }).forEach(([k, v]) => fd.append(k, v));
-
-    form.education.forEach(v => fd.append("education", v));
-    form.skills.forEach(v => fd.append("skills", v));
-    form.role.forEach(v => fd.append("role", v));
-    form.certificates.forEach(f => fd.append("certificates", f));
-    if (form.image_path) fd.append("image_path", form.image_path);
 
     try {
-      const res = await fetch(`https://skill-learn-job.onrender.com/save-profile/${form.user_id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
-      });
+
+      const res = await fetch(
+        `https://skill-learn-job.onrender.com/save-profile/${form.user_id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form)
+        }
+      );
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
@@ -224,6 +223,8 @@ const ProfileCreation = ({ onClose }) => {
   };
 
   if (loading) return <p>Loading profile…</p>;
+
+  /* ================= UI (UNCHANGED) ================= */
 
   return (
     <div className="profile-overlay">
