@@ -9,9 +9,10 @@ app = Flask(__name__)
 CORS(
     app,
     supports_credentials=True,
-    resources={r"/*": {"origins": "*"}},
-    allow_headers=["Content-Type", "Authorization"],
-    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    origins=[
+        "https://mathesh-jobskill.vercel.app",
+        "http://localhost:5173"
+    ]
 )
 
 
