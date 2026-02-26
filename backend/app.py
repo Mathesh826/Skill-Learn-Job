@@ -121,7 +121,26 @@ def login():
 
     return jsonify({"error": "Invalid password"}), 401
 
+# =========================
+# ✅ GET USER BASIC INFO
+# =========================
+@app.route("/get-user/<int:user_id>")
+def get_user(user_id):
 
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT name, phone, email FROM users WHERE id=%s",
+        (user_id,)
+    )
+
+    user = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(user or {})
 # ======================================================
 # ✅ SAVE USER PROFILE
 # ======================================================
