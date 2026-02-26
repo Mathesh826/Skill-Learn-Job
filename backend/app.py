@@ -148,7 +148,14 @@ def get_user(user_id):
 @app.route("/save-profile/<int:user_id>", methods=["POST"])
 def save_profile(user_id):
 
-    data = request.json
+    form = request.form
+    files = request.files
+
+    image = files.get("image_path")
+
+    image_name = image.filename if image else ""
+
+    certificates = [f.filename for f in files.getlist("certificates")]
 
     conn = get_db()
     cursor = conn.cursor()
@@ -157,7 +164,7 @@ def save_profile(user_id):
         INSERT INTO user_profiles
         (user_id,name,phone,email,father_name,gender,dob,
          education,skills,role,certificates,image_path,saved)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,1)
         ON DUPLICATE KEY UPDATE
          name=VALUES(name),
          phone=VALUES(phone),
@@ -173,28 +180,24 @@ def save_profile(user_id):
          saved=1
     """, (
         user_id,
-        data["name"],
-        data["phone"],
-        data["email"],
-        data["father_name"],
-        data["gender"],
-        data["dob"],
-        json.dumps(data["education"]),
-        json.dumps(data["skills"]),
-        json.dumps(data["role"]),
-        json.dumps(data["certificates"]),
-        data["image_path"],
-        1
+        form["name"],
+        form["phone"],
+        form["email"],
+        form["father_name"],
+        form["gender"],
+        form["dob"],
+        form["education"],
+        form["skills"],
+        form["role"],
+        json.dumps(certificates),
+        image_name
     ))
 
     conn.commit()
-
     cursor.close()
     conn.close()
 
     return jsonify({"message": "Profile saved"})
-
-
 # ======================================================
 # ✅ GET PROFILE
 # ======================================================
