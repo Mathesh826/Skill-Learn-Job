@@ -9,11 +9,11 @@ const emitProfileUpdate = () => {
 };
 
 const ALL_ROLES = [
-  "Administrator","Android Developer","AI Engineer","Application Support",
-  "Automation Tester","Backend Developer","Business Analyst","Cloud Engineer",
-  "Content Writer","Data Analyst","Data Engineer","Database Administrator",
-  "DevOps Engineer","Frontend Developer","Fullstack Developer","HR",
-  "Intern","Java Developer","Project Manager"
+  "Administrator", "Android Developer", "AI Engineer", "Application Support",
+  "Automation Tester", "Backend Developer", "Business Analyst", "Cloud Engineer",
+  "Content Writer", "Data Analyst", "Data Engineer", "Database Administrator",
+  "DevOps Engineer", "Frontend Developer", "Fullstack Developer", "HR",
+  "Intern", "Java Developer", "Project Manager"
 ];
 
 const ProfileCreation = ({ onClose }) => {
@@ -47,20 +47,20 @@ const ProfileCreation = ({ onClose }) => {
   const fetchUser = async () => {
     const userId = localStorage.getItem("user_id");
     if (!userId) {
-      Swal.fire("Error","User ID missing. Please login again.","error");
+      Swal.fire("Error", "User ID missing. Please login again.", "error");
       return;
     }
 
-    
+
 
     setForm(prev => ({ ...prev, user_id: userId }));
 
     try {
-      const res = await fetch(`https://skill-learn-job.onrender.com/user/${userId}`);
+      fetch(`https://skill-learn-job.onrender.com/get-profile/${userId}`)
       const data = await res.json();
 
       if (!res.ok) {
-        Swal.fire("Error", data.message || "Failed to fetch user","error");
+        Swal.fire("Error", data.message || "Failed to fetch user", "error");
         return;
       }
 
@@ -82,7 +82,7 @@ const ProfileCreation = ({ onClose }) => {
       setEditMode(false);
 
     } catch {
-      Swal.fire("Error","Server connection failed","error");
+      Swal.fire("Error", "Server connection failed", "error");
     } finally {
       setLoading(false);
     }
@@ -148,7 +148,7 @@ const ProfileCreation = ({ onClose }) => {
     setFilteredRoles(
       ALL_ROLES.filter(
         r => r.toLowerCase().includes(val.toLowerCase()) &&
-        !form.role.includes(r)
+          !form.role.includes(r)
       )
     );
   };
@@ -182,7 +182,7 @@ const ProfileCreation = ({ onClose }) => {
       father_name: form.father_name,
       gender: form.gender,
       dob: form.dob
-    }).forEach(([k,v]) => fd.append(k,v));
+    }).forEach(([k, v]) => fd.append(k, v));
 
     form.education.forEach(v => fd.append("education", v));
     form.skills.forEach(v => fd.append("skills", v));
@@ -191,9 +191,10 @@ const ProfileCreation = ({ onClose }) => {
     if (form.image_path) fd.append("image_path", form.image_path);
 
     try {
-      const res = await fetch("https://skill-learn-job.onrender.com/create-profile", {
+      const res = await fetch(`https://skill-learn-job.onrender.com/save-profile/${form.user_id}`, {
         method: "POST",
-        body: fd
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form)
       });
 
       const data = await res.json();
@@ -211,7 +212,7 @@ const ProfileCreation = ({ onClose }) => {
       setTimeout(onClose, 600);
 
     } catch {
-      Swal.fire("Error","Profile not saved","error");
+      Swal.fire("Error", "Profile not saved", "error");
     } finally {
       setSaving(false);
     }
@@ -265,7 +266,7 @@ const ProfileCreation = ({ onClose }) => {
         {/* GENDER */}
         <label className="gender-label">Gender</label>
         <div className="gender-group">
-          {["Male","Female","Other"].map(g => (
+          {["Male", "Female", "Other"].map(g => (
             <label key={g}>
               <input type="radio" name="gender" value={g}
                 checked={form.gender === g}
