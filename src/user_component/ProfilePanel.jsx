@@ -56,7 +56,7 @@ const ProfileCreation = ({ onClose }) => {
     setForm(prev => ({ ...prev, user_id: userId }));
 
     try {
-      const res = await fetch(`https://skill-learn-job.onrender.com/user/${user_Id}`);
+      const res = await fetch(`https://skill-learn-job.onrender.com/user/${userId}`);
       const data = await res.json();
 
       if (!res.ok) {
