@@ -244,52 +244,42 @@ const LoginPanel = ({ isOpen, onClose }) => {
 
   // ---------- LOGIN SUBMIT ----------
   const handleLogin = async () => {
-    if (!canLogin) return;
+  if (!canLogin) return;
 
-    try {
-      const res = await fetch("https://skill-learn-job.onrender.com/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: loginUsername,
-          password: loginPassword,
-        }),
-      });
+  try {
+    const res = await fetch("https://skill-learn-job.onrender.com/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: loginUsername,
+        password: loginPassword,
+      }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) return errorToast(data.message || "Invalid credentials");
+    if (!res.ok) return errorToast(data.message || "Invalid credentials");
 
-      if (data.user?.id) {
-        console.log("USER ID STORED =", data.user.id);
-        localStorage.setItem("user_id", data.user.id); // ⭐ FIXED
-      }
+    // ✅ correct
+    localStorage.setItem("user_id", data.user_id);
+    localStorage.setItem("username", loginUsername);
 
-      if (data.username) {
-        localStorage.setItem("username", data.username);
-      }
+    successToast("Login successful");
 
-      // 1️⃣ Show toast (5 sec)
-      successToast("Login successful");
+    setTimeout(() => {
+      setShowLoader(true);
 
-      // 2️⃣ After toast disappears → show loader
       setTimeout(() => {
-        setShowLoader(true);
+        window.location.href = "/userpage";
+      }, 5000);
 
-        // disable closing while loading
-        document.body.style.pointerEvents = "none";
+    }, 2000);
 
-        // 3️⃣ Loader runs 5 sec → redirect
-        setTimeout(() => {
-          window.location.href = "/userpage";
-        }, 7000);
-
-      }, 2500); // wait for toast to finish
-
-    } catch (err) {
-      errorToast("Server connection failed");
-    }
-  };
+  } catch (err) {
+    console.log(err);
+    errorToast("Server connection failed");
+  }
+};
 
 
   // ---------- UI ----------
