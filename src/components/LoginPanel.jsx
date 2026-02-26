@@ -5,7 +5,6 @@ import Loader from "./Loader";
 
 
 
-
 const LoginPanel = ({ isOpen, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -263,7 +262,7 @@ const LoginPanel = ({ isOpen, onClose }) => {
 
       if (data.user?.id) {
         console.log("USER ID STORED =", data.user.id);
-        localStorage.setItem("userId", data.user.id); // ⭐ FIXED
+        localStorage.setItem("user_id", data.user.id); // ⭐ FIXED
       }
 
       if (data.username) {
