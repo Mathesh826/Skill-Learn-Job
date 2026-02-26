@@ -37,15 +37,13 @@ const ProfileCreation = ({ onClose }) => {
     skills: [],
     role: [],
     roleInput: "",
-    certificates: [],
-    image_path: null,
     previewImage: null
   });
 
   const [filteredRoles, setFilteredRoles] = useState([]);
 
   /* =======================================================
-     ✅ FIXED FETCH USER (users + profile merge)
+     ✅ FETCH USER (users + profile merge)
   ======================================================= */
   const fetchUser = async () => {
 
@@ -58,13 +56,11 @@ const ProfileCreation = ({ onClose }) => {
 
     try {
 
-      // ⭐ users table
       const userRes = await fetch(
         `https://skill-learn-job.onrender.com/get-user/${userId}`
       );
       const userData = await userRes.json();
 
-      // ⭐ profile table
       const profileRes = await fetch(
         `https://skill-learn-job.onrender.com/get-profile/${userId}`
       );
@@ -73,13 +69,9 @@ const ProfileCreation = ({ onClose }) => {
       setForm(prev => ({
         ...prev,
         user_id: userId,
-
-        // users table auto fill
         name: userData.name || "",
         phone: userData.phone || "",
         email: userData.email || "",
-
-        // profile table
         father_name: profileData.father_name || "",
         gender: profileData.gender || "",
         dob: profileData.dob || "",
@@ -107,25 +99,6 @@ const ProfileCreation = ({ onClose }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
-  };
-
-  /* ---------------- FILE HANDLER ---------------- */
-  const handleFile = (e) => {
-    if (!editMode) return;
-
-    const { name, files } = e.target;
-
-    if (name === "certificates") {
-      setForm(prev => ({ ...prev, certificates: Array.from(files) }));
-    }
-
-    if (name === "image_path") {
-      setForm(prev => ({
-        ...prev,
-        image_path: files[0],
-        previewImage: URL.createObjectURL(files[0])
-      }));
-    }
   };
 
   /* ---------------- CHIP HELPERS ---------------- */
@@ -177,7 +150,7 @@ const ProfileCreation = ({ onClose }) => {
   };
 
   /* =======================================================
-     ✅ FIXED SAVE (JSON only, no FormData mismatch)
+     ✅ FIXED SAVE (ONLY JSON SAFE DATA)
   ======================================================= */
   const handleSubmit = async () => {
 
@@ -187,12 +160,26 @@ const ProfileCreation = ({ onClose }) => {
 
     try {
 
+      const payload = {
+        user_id: form.user_id,
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        father_name: form.father_name,
+        gender: form.gender,
+        dob: form.dob,
+        education: form.education,
+        skills: form.skills,
+        role: form.role,
+        image_path: form.previewImage || ""
+      };
+
       const res = await fetch(
         `https://skill-learn-job.onrender.com/save-profile/${form.user_id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form)
+          body: JSON.stringify(payload)
         }
       );
 
@@ -224,7 +211,7 @@ const ProfileCreation = ({ onClose }) => {
 
   if (loading) return <p>Loading profile…</p>;
 
-  /* ================= UI (UNCHANGED) ================= */
+  /* ================= UI UNCHANGED ================= */
 
   return (
     <div className="profile-overlay">
@@ -358,6 +345,7 @@ const ProfileCreation = ({ onClose }) => {
         )}
       </div>
     </div>
+
   );
 };
 
