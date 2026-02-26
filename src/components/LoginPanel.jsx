@@ -2,11 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import Loader from "./Loader";
-import { useNavigate } from "react-router-dom";
 
 
 
-const navigate = useNavigate();
 
 const LoginPanel = ({ isOpen, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -284,7 +282,7 @@ const LoginPanel = ({ isOpen, onClose }) => {
 
         // 3️⃣ Loader runs 5 sec → redirect
         setTimeout(() => {
-          navigate("/userpage");
+          window.location.href = "/userpage";
         }, 7000);
 
       }, 2500); // wait for toast to finish
