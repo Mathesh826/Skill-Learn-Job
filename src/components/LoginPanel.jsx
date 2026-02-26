@@ -262,7 +262,7 @@ const LoginPanel = ({ isOpen, onClose }) => {
 
       if (data.user?.id) {
         console.log("USER ID STORED =", data.user.id);
-        localStorage.setItem("user_id", data.user.id); // ⭐ FIXED
+        localStorage.setItem("userId", data.user.id); // ⭐ FIXED
       }
 
       if (data.username) {
