@@ -51,6 +51,8 @@ const ProfileCreation = ({ onClose }) => {
       return;
     }
 
+    console.log("Profile read ID =", localStorage.getItem("userId"));
+
     setForm(prev => ({ ...prev, user_id: userId }));
 
     try {
