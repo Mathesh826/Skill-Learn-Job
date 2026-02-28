@@ -149,6 +149,21 @@ const ProfileCreation = ({ onClose }) => {
     setFilteredRoles([]);
   };
 
+const handleFile = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    setForm(prev => ({
+      ...prev,
+      previewImage: reader.result
+    }));
+  };
+  reader.readAsDataURL(file);
+};
+
+
   /* =======================================================
      ✅ FIXED SAVE (ONLY JSON SAFE DATA)
   ======================================================= */

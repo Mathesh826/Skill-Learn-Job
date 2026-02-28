@@ -148,14 +148,7 @@ def get_user(user_id):
 @app.route("/save-profile/<int:user_id>", methods=["POST"])
 def save_profile(user_id):
 
-    form = request.form
-    files = request.files
-
-    image = files.get("image_path")
-
-    image_name = image.filename if image else ""
-
-    certificates = [f.filename for f in files.getlist("certificates")]
+    data = request.json   # ✅ CHANGE
 
     conn = get_db()
     cursor = conn.cursor()
@@ -180,17 +173,17 @@ def save_profile(user_id):
          saved=1
     """, (
         user_id,
-        form["name"],
-        form["phone"],
-        form["email"],
-        form["father_name"],
-        form["gender"],
-        form["dob"],
-        form["education"],
-        form["skills"],
-        form["role"],
-        json.dumps(certificates),
-        image_name
+        data["name"],
+        data["phone"],
+        data["email"],
+        data["father_name"],
+        data["gender"],
+        data["dob"],
+        json.dumps(data["education"]),   # ✅ convert list
+        json.dumps(data["skills"]),
+        json.dumps(data["role"]),
+        json.dumps([]),
+        data["image_path"]
     ))
 
     conn.commit()
@@ -198,6 +191,7 @@ def save_profile(user_id):
     conn.close()
 
     return jsonify({"message": "Profile saved"})
+
 # ======================================================
 # ✅ GET PROFILE
 # ======================================================
