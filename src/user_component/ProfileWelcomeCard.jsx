@@ -13,23 +13,30 @@ const ProfileWelcomeCard = () => {
   const [flipped, setFlipped] = useState(false);
 
   const fetchUser = async () => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) return;
+  const userId = localStorage.getItem("user_id"); // ✅ match login key
+  if (!userId) return;
 
-    try {
-      const res = await fetch(`https://skill-learn-job.onrender.com/user/${userId}`);
-      const data = await res.json();
+  try {
+    // ✅ call both APIs
+    const userRes = await fetch(
+      `https://skill-learn-job.onrender.com/get-user/${userId}`
+    );
+    const userData = await userRes.json();
 
-      if (res.ok) {
-        setUser({
-          name: data.name || "",
-          image: data.image_path || null
-        });
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    const profileRes = await fetch(
+      `https://skill-learn-job.onrender.com/get-profile/${userId}`
+    );
+    const profileData = await profileRes.json();
+
+    setUser({
+      name: userData.name || "",
+      image: profileData.image_path || null
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   /* AUTO FLIP */
   useEffect(() => {
