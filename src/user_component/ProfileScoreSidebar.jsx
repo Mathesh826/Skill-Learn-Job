@@ -35,17 +35,24 @@ const ProfileScoreSidebar = () => {
   };
 
   const fetchAndUpdate = async () => {
-    const userId = localStorage.getItem("user_id");
-    if (!userId) return;
+  const userId = localStorage.getItem("user_id");
+  if (!userId) return;
 
-    try {
-      const res = await fetch(`https://skill-learn-job.onrender.com/user/${userId}`);
-      const data = await res.json();
-      if (res.ok) setScore(calculateScore(data));
-    } catch (err) {
-      console.error(err);
+  try {
+    const res = await fetch(
+      `https://skill-learn-job.onrender.com/get-profile/${userId}`
+    );
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setScore(calculateScore(data)); // ✅ now gets full profile
     }
-  };
+
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   useEffect(() => {
   const sidebar = document.querySelector(".profile-score-sidebar");
