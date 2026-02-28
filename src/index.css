@@ -1166,3 +1166,23 @@ html, body, #root {
   75% { transform: translateX(-3px); }
   100% { transform: translateX(0); }
 }
+.email-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.otp-btn{
+  padding:8px 14px;
+  background:#4cafef;
+  border:none;
+  border-radius:6px;
+  color:white;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.otp-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}

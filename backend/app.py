@@ -4,6 +4,8 @@ import bcrypt
 import mysql.connector
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from flask_mail import Mail, Message
+import random, time
 
 app = Flask(__name__)
 CORS(
@@ -15,6 +17,15 @@ CORS(
     ]
 )
 
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'yourgmail@gmail.com'
+app.config['MAIL_PASSWORD'] = 'gmail_app_password'
+
+mail = Mail(app)
+
+otp_store = {}
 
 @app.after_request
 def after_request(response):
@@ -86,6 +97,16 @@ def register():
     finally:
         cursor.close()
         conn.close()
+
+    msg = Message(
+    "Welcome to SkillLearn",
+    sender=app.config['MAIL_USERNAME'],
+    recipients=[email]
+    )
+
+    msg.body = "Your account created successfully 🎉"
+
+    mail.send(msg)
 
 
 # ======================================================
@@ -345,6 +366,39 @@ def get_jobs():
 
     return jsonify(jobs)
 
+
+@app.route("/send-otp", methods=["POST"])
+def send_otp():
+    email = request.json["email"]
+
+    otp = str(random.randint(100000, 999999))
+    expiry = time.time() + 300
+
+    otp_store[email] = (otp, expiry)
+
+    msg = Message("SkillLearn OTP", sender=app.config['MAIL_USERNAME'], recipients=[email])
+    msg.body = f"Your OTP: {otp}"
+
+    mail.send(msg)
+
+    return {"message": "OTP sent"}
+
+
+@app.route("/verify-otp", methods=["POST"])
+def verify_otp():
+    email = request.json["email"]
+    otp = request.json["otp"]
+
+    if email not in otp_store:
+        return {"success": False}, 400
+
+    saved, expiry = otp_store[email]
+
+    if time.time() > expiry or saved != otp:
+        return {"success": False}, 400
+
+    del otp_store[email]
+    return {"success": True}
 
 # ======================================================
 # ✅ RUN (Local only)
