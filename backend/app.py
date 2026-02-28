@@ -8,14 +8,7 @@ from flask_mail import Mail, Message
 import random, time
 
 app = Flask(__name__)
-CORS(
-    app,
-    resources={r"/*": {"origins": [
-        "https://mathesh-jobskill.vercel.app",
-        "http://localhost:5173"
-    ]}},
-    supports_credentials=False
-)
+CORS(app)
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
