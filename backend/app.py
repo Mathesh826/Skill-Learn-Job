@@ -10,29 +10,24 @@ import random, time
 app = Flask(__name__)
 CORS(
     app,
-    supports_credentials=True,
-    origins=[
+    resources={r"/*": {"origins": [
         "https://mathesh-jobskill.vercel.app",
         "http://localhost:5173"
-    ]
+    ]}},
+    supports_credentials=False
 )
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'yourgmail@gmail.com'
-app.config['MAIL_PASSWORD'] = 'gmail_app_password'
+app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USER")
+app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASS")
 
 mail = Mail(app)
 
 otp_store = {}
 
-@app.after_request
-def after_request(response):
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-    return response
+
 
 
 
@@ -89,6 +84,15 @@ def register():
 
         conn.commit()
 
+        # ✅ SEND MAIL HERE (before return)
+        msg = Message(
+            "Welcome to SkillLearn 🎉",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[email]
+        )
+        msg.body = "Your account created successfully!"
+        mail.send(msg)
+
         return jsonify({"message": "User registered successfully"})
 
     except Exception as e:
@@ -97,18 +101,6 @@ def register():
     finally:
         cursor.close()
         conn.close()
-
-    msg = Message(
-    "Welcome to SkillLearn",
-    sender=app.config['MAIL_USERNAME'],
-    recipients=[email]
-    )
-
-    msg.body = "Your account created successfully 🎉"
-
-    mail.send(msg)
-
-
 # ======================================================
 # ✅ USER LOGIN
 # ======================================================
