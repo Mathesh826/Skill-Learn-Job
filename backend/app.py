@@ -6,9 +6,10 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_mail import Mail, Message
 import random, time
+import traceback
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://mathesh-jobskill.vercel.app"])
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -378,8 +379,8 @@ def send_otp():
         return jsonify({"message": "OTP sent"})
 
     except Exception as e:
-        print("OTP ERROR:", e)
-        return jsonify({"error": str(e)}), 500
+      traceback.print_exc()
+    return jsonify({"error": str(e)}), 500
     
     
 @app.route("/verify-otp", methods=["POST"])
