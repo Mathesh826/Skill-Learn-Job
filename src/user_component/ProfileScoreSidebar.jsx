@@ -35,7 +35,7 @@ const ProfileScoreSidebar = () => {
   };
 
   const fetchAndUpdate = async () => {
-    const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("user_id");
     if (!userId) return;
 
     try {
