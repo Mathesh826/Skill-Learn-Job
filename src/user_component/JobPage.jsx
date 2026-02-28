@@ -102,7 +102,7 @@ export default function JobPage({ onClose }) {
 
 
       {!job ? (
-        <p>No jobs available</p>
+        <p><center>No jobs available</center></p>
       ) : (
         <>
           {/* ===== MAIN CARD ===== */}
