@@ -148,49 +148,56 @@ def get_user(user_id):
 @app.route("/save-profile/<int:user_id>", methods=["POST"])
 def save_profile(user_id):
 
-    data = request.json   # ✅ CHANGE
+    data = request.json   # ✅ receive JSON from React
 
-    conn = get_db()
-    cursor = conn.cursor()
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
 
-    cursor.execute("""
-        INSERT INTO user_profiles
-        (user_id,name,phone,email,father_name,gender,dob,
-         education,skills,role,certificates,image_path,saved)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,1)
-        ON DUPLICATE KEY UPDATE
-         name=VALUES(name),
-         phone=VALUES(phone),
-         email=VALUES(email),
-         father_name=VALUES(father_name),
-         gender=VALUES(gender),
-         dob=VALUES(dob),
-         education=VALUES(education),
-         skills=VALUES(skills),
-         role=VALUES(role),
-         certificates=VALUES(certificates),
-         image_path=VALUES(image_path),
-         saved=1
-    """, (
-        user_id,
-        data["name"],
-        data["phone"],
-        data["email"],
-        data["father_name"],
-        data["gender"],
-        data["dob"],
-        json.dumps(data["education"]),   # ✅ convert list
-        json.dumps(data["skills"]),
-        json.dumps(data["role"]),
-        json.dumps([]),
-        data["image_path"]
-    ))
+        cursor.execute("""
+            INSERT INTO user_profiles
+            (user_id,name,phone,email,father_name,gender,dob,
+             education,skills,role,certificates,image_path,saved)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,1)
+            ON DUPLICATE KEY UPDATE
+             name=VALUES(name),
+             phone=VALUES(phone),
+             email=VALUES(email),
+             father_name=VALUES(father_name),
+             gender=VALUES(gender),
+             dob=VALUES(dob),
+             education=VALUES(education),
+             skills=VALUES(skills),
+             role=VALUES(role),
+             certificates=VALUES(certificates),
+             image_path=VALUES(image_path),
+             saved=1
+        """, (
+            user_id,
+            data.get("name", ""),
+            data.get("phone", ""),
+            data.get("email", ""),
+            data.get("father_name", ""),
+            data.get("gender", ""),
+            data.get("dob", ""),
+            json.dumps(data.get("education", [])),   # ✅ list → JSON
+            json.dumps(data.get("skills", [])),
+            json.dumps(data.get("role", [])),
+            json.dumps([]),
+            data.get("image_path", "")
+        ))
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+        conn.commit()
+        return jsonify({"message": "Profile saved"})
 
-    return jsonify({"message": "Profile saved"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
 
 # ======================================================
 # ✅ GET PROFILE
