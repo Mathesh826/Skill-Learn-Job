@@ -148,11 +148,15 @@ def get_user(user_id):
 @app.route("/save-profile/<int:user_id>", methods=["POST"])
 def save_profile(user_id):
 
-    data = request.json   # ✅ receive JSON from React
-
     try:
+        data = request.get_json(force=True) or {}
+
         conn = get_db()
         cursor = conn.cursor()
+
+        education = json.dumps(data.get("education", []))
+        skills = json.dumps(data.get("skills", []))
+        role = json.dumps(data.get("role", []))
 
         cursor.execute("""
             INSERT INTO user_profiles
@@ -174,30 +178,26 @@ def save_profile(user_id):
              saved=1
         """, (
             user_id,
-            data.get("name", ""),
-            data.get("phone", ""),
-            data.get("email", ""),
-            data.get("father_name", ""),
-            data.get("gender", ""),
-            data.get("dob", ""),
-            json.dumps(data.get("education", [])),   # ✅ list → JSON
-            json.dumps(data.get("skills", [])),
-            json.dumps(data.get("role", [])),
-            json.dumps([]),
-            data.get("image_path", "")
+            str(data.get("name","")),
+            str(data.get("phone","")),
+            str(data.get("email","")),
+            str(data.get("father_name","")),
+            str(data.get("gender","")),
+            str(data.get("dob","")),
+            education,
+            skills,
+            role,
+            "[]",
+            str(data.get("image_path",""))
         ))
 
         conn.commit()
+
         return jsonify({"message": "Profile saved"})
 
     except Exception as e:
+        print("SAVE PROFILE ERROR:", e)   # shows in logs
         return jsonify({"error": str(e)}), 500
-
-    finally:
-        cursor.close()
-        conn.close()
-
-
 
 # ======================================================
 # ✅ GET PROFILE
