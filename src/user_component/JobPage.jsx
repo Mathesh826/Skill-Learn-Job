@@ -89,6 +89,17 @@ export default function JobPage({ onClose }) {
         <h5>Your Interested Jobs</h5>
       </div>
 
+      {/* ===== NEW: inside top bar ===== */}
+            <div className="job-card-top">
+              <span className="job-time">
+                {new Date().toLocaleString()}
+              </span>
+
+              <button className="job-close-btn" onClick={onClose}>
+                ✕
+              </button>
+            </div>
+
 
       {!job ? (
         <p>No jobs available</p>
@@ -102,16 +113,7 @@ export default function JobPage({ onClose }) {
             onTouchEnd={handleTouchEnd}
           >
 
-            {/* ===== NEW: inside top bar ===== */}
-            <div className="job-card-top">
-              <span className="job-time">
-                {new Date().toLocaleString()}
-              </span>
-
-              <button className="job-close-btn" onClick={onClose}>
-                ✕
-              </button>
-            </div>
+            
 
 
             {/* ===== OLD CONTENT (unchanged) ===== */}
