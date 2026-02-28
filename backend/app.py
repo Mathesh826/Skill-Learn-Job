@@ -352,23 +352,36 @@ def get_jobs():
     return jsonify(jobs)
 
 
-@app.route("/send-otp", methods=["POST"])
+@app.route("/send-otp", methods=["POST", "OPTIONS"])
 def send_otp():
-    email = request.json["email"]
 
-    otp = str(random.randint(100000, 999999))
-    expiry = time.time() + 300
+    if request.method == "OPTIONS":
+        return "", 200   # preflight safe
 
-    otp_store[email] = (otp, expiry)
+    try:
+        email = request.json["email"]
 
-    msg = Message("SkillLearn OTP", sender=app.config['MAIL_USERNAME'], recipients=[email])
-    msg.body = f"Your OTP: {otp}"
+        otp = str(random.randint(100000, 999999))
+        expiry = time.time() + 300
 
-    mail.send(msg)
+        otp_store[email] = (otp, expiry)
 
-    return {"message": "OTP sent"}
+        msg = Message(
+            "SkillLearn OTP",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[email]
+        )
+        msg.body = f"Your OTP: {otp}"
 
+        mail.send(msg)
 
+        return jsonify({"message": "OTP sent"})
+
+    except Exception as e:
+        print("OTP ERROR:", e)
+        return jsonify({"error": str(e)}), 500
+    
+    
 @app.route("/verify-otp", methods=["POST"])
 def verify_otp():
     email = request.json["email"]
