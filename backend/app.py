@@ -9,22 +9,14 @@ import random, time
 import traceback
 
 app = Flask(__name__)
-CORS(
-    app,
-    origins=["https://mathesh-jobskill.vercel.app"],
-    supports_credentials=True
-)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
-app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get("MAIL_USERNAME")
 
-mail = Mail(app)
-print("USERNAME:", app.config['MAIL_USERNAME'])
-print("PASSWORD:", app.config['MAIL_PASSWORD'])
+
 
 otp_store = {}
 
@@ -360,46 +352,29 @@ def get_jobs():
     return jsonify(jobs)
 
 
-@app.route("/send-otp", methods=["POST", "OPTIONS"])
+@app.route("/send-otp", methods=["POST"])
 def send_otp():
-
-    if request.method == "OPTIONS":
-        return "", 200
-
     try:
-        data = request.get_json(silent=True)
-
-        if not data:
-            return jsonify({"error": "No JSON"}), 400
-
-        email = data.get("email")
-
-        if not email:
-            return jsonify({"error": "Email missing"}), 400
-
+        data = request.get_json()
+        email = data["email"]
 
         otp = str(random.randint(100000, 999999))
         otp_store[email] = (otp, time.time() + 300)
 
-
         msg = Message(
             subject="SkillLearn OTP",
-            sender=app.config["MAIL_USERNAME"],
-            recipients=[email]
+            recipients=[email],
+            body=f"Your OTP: {otp}"
         )
 
-        msg.body = f"Your OTP: {otp}"
-
-
-        # 🔥 IMPORTANT
         mail.send(msg)
 
+        print("OTP SENT SUCCESSFULLY")
 
-        return jsonify({"message": "OTP sent"}), 200
-
+        return jsonify({"message": "OTP sent"})
 
     except Exception as e:
-        import traceback
+        print("OTP ERROR:", e)
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
