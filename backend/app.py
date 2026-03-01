@@ -376,18 +376,20 @@ def send_otp():
 
         msg.body = f"Your OTP: {otp}"
 
-        # ✅ VERY IMPORTANT
-        #mail.send(msg)
+        # 🔥 SAFE SEND
+        try:
+            mail.send(msg)
+            print("MAIL SENT SUCCESS ✅")
+        except Exception as e:
+            print("MAIL ERROR ❌:", e)
 
-        print("MAIL SENT SUCCESS ✅")
         print("OTP:", otp)
 
         return jsonify({"message": "OTP sent"})
 
     except Exception as e:
         traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
-    
+        return jsonify({"error": str(e)}), 500   
 
     
 @app.route("/verify-otp", methods=["POST"])
