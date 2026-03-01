@@ -9,7 +9,9 @@ import random, time
 import traceback
 
 app = Flask(__name__)
-CORS(app, origins=["https://mathesh-jobskill.vercel.app"])
+CORS(app, origins=["https://mathesh-jobskill.vercel.app"],
+     supports_credentials=True
+     )
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -356,7 +358,7 @@ def get_jobs():
     return jsonify(jobs)
 
 
-@app.route("/send-otp", methods=["POST"])
+@app.route("/send-otp", methods=["POST", "OPTIONS"])
 def send_otp():
     try:
         email = request.json.get("email")
