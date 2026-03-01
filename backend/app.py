@@ -357,7 +357,7 @@ def get_jobs():
 def send_otp():
 
     if request.method == "OPTIONS":
-        return "", 200   # preflight safe
+        return "", 200
 
     try:
         email = request.json["email"]
@@ -372,20 +372,22 @@ def send_otp():
             sender=app.config['MAIL_USERNAME'],
             recipients=[email]
         )
+
         msg.body = f"Your OTP: {otp}"
 
-        mail.send(msg)
-        # mail.send(msg)
-        print("OTP:", otp)  
+        mail.send(msg)   # keep this
+
+        print("OTP:", otp)
 
         return jsonify({"message": "OTP sent"})
-    
-    
-    except Exception as e:
-      traceback.print_exc()
-    return jsonify({"error": str(e)}), 500
 
-  
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+    
+    
+    
+
     
 @app.route("/verify-otp", methods=["POST"])
 def verify_otp():
