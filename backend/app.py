@@ -16,6 +16,7 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USER")
 app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASS")
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get("MAIL_USER")
 
 mail = Mail(app)
 
@@ -375,8 +376,10 @@ def send_otp():
 
         msg.body = f"Your OTP: {otp}"
 
-        #mail.send(msg)   # keep this
+        # ✅ VERY IMPORTANT
+        mail.send(msg)
 
+        print("MAIL SENT SUCCESS ✅")
         print("OTP:", otp)
 
         return jsonify({"message": "OTP sent"})
@@ -384,8 +387,6 @@ def send_otp():
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
-    
-
     
 
     
