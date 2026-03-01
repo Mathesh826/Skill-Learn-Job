@@ -363,28 +363,30 @@ def get_jobs():
 @app.route("/send-otp", methods=["POST", "OPTIONS"])
 def send_otp():
 
+    # ✅ VERY IMPORTANT (preflight handle)
     if request.method == "OPTIONS":
         return "", 200
 
     try:
-        data = request.get_json(silent=True) or {}
+        data = request.get_json(force=True)  # safer than request.json
         email = data.get("email")
 
         if not email:
             return jsonify({"error": "Email missing"}), 400
 
         otp = str(random.randint(100000, 999999))
-        otp_store[email] = otp
+        otp_store[email] = (otp, time.time() + 300)
 
         msg = Message(
             "SkillLearn OTP",
-            sender=app.config['MAIL_USERNAME'],
             recipients=[email]
         )
 
         msg.body = f"Your OTP: {otp}"
 
         mail.send(msg)
+
+        print("MAIL SENT ✅", email)
 
         return jsonify({"message": "OTP sent"})
 
