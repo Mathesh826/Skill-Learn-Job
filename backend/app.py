@@ -34,7 +34,7 @@ otp_store = {}
 
 # ======================================================
 # ✅ DATABASE CONNECTION (Railway / Render ENV variables)
-# ======================================================
+# ======================================================    
 
 def get_db():
     return mysql.connector.connect(
@@ -363,16 +363,14 @@ def get_jobs():
 @app.route("/send-otp", methods=["POST", "OPTIONS"])
 def send_otp():
 
-    # ✅ handle preflight
     if request.method == "OPTIONS":
-        return ("", 200)
+        return "", 200
 
     try:
-        # ✅ SAFE JSON read (no crash)
         data = request.get_json(silent=True)
 
         if not data:
-            return jsonify({"error": "No JSON received"}), 400
+            return jsonify({"error": "No JSON"}), 400
 
         email = data.get("email")
 
@@ -390,21 +388,18 @@ def send_otp():
             recipients=[email]
         )
 
-        msg.body = f"Your OTP is: {otp}"
+        msg.body = f"Your OTP: {otp}"
 
 
-        # ✅ if mail fails, don't crash
-        try:
-            mail.send(msg)
-            print("MAIL SENT ✅", email)
-        except Exception as mail_error:
-            print("MAIL ERROR ❌", mail_error)
-            return jsonify({"error": "Mail send failed"}), 500
+        # 🔥 IMPORTANT
+        mail.send(msg)
 
 
-        return jsonify({"message": "OTP sent successfully"}), 200
+        return jsonify({"message": "OTP sent"}), 200
+
 
     except Exception as e:
+        import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
