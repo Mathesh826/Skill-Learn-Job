@@ -220,25 +220,37 @@ const [canResend, setCanResend] = useState(false);
     });
   };
 
-  // SEND OTP
-const handleSendOtp = async () => {
+  const handleSendOtp = async () => {
   if (errors.email || !email) return;
 
-  await fetch("https://skill-learn-job.onrender.com/send-otp", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ email })
-})
+  try {
+    const res = await fetch("https://skill-learn-job.onrender.com/send-otp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email })
+    });
 
-  setShowOtpModal(true);
-  setTimer(60);
-  setCanResend(false);
+    const data = await res.json();
 
-  successToast("OTP sent");
+    // ❌ backend error
+    if (!res.ok) {
+      errorToast(data.error || "OTP send failed");
+      return;
+    }
+
+    // ✅ success only here
+    setShowOtpModal(true);
+    setTimer(60);
+    setCanResend(false);
+
+    successToast("OTP sent");
+
+  } catch (err) {
+    errorToast("Server connection failed");
+  }
 };
-
 // VERIFY OTP
 const handleVerifyOtp = async () => {
   const res = await fetch("https://skill-learn-job.onrender.com/verify-otp", {
