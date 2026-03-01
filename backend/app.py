@@ -375,7 +375,7 @@ def send_otp():
 
         msg.body = f"Your OTP: {otp}"
 
-        mail.send(msg)   # keep this
+        #mail.send(msg)   # keep this
 
         print("OTP:", otp)
 
@@ -385,7 +385,7 @@ def send_otp():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     
-    
+
     
 
     
