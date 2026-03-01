@@ -377,7 +377,7 @@ def send_otp():
         msg.body = f"Your OTP: {otp}"
 
         # ✅ VERY IMPORTANT
-        mail.send(msg)
+        #mail.send(msg)
 
         print("MAIL SENT SUCCESS ✅")
         print("OTP:", otp)
