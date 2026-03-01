@@ -381,6 +381,7 @@ def send_otp():
         return jsonify({"message": "OTP sent"})
 
     except Exception as e:
+        print("MAIL ERROR:", str(e))
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500  
 
