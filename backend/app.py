@@ -19,6 +19,8 @@ app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get("MAIL_USERNAME")
 
 mail = Mail(app)
+print("USERNAME:", app.config['MAIL_USERNAME'])
+print("PASSWORD:", app.config['MAIL_PASSWORD'])
 
 otp_store = {}
 
