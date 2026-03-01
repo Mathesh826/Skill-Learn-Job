@@ -225,10 +225,14 @@ const handleSendOtp = async () => {
   if (errors.email || !email) return;
 
   await fetch("https://skill-learn-job.onrender.com/send-otp", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
-  });
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                email: email
+              })
+})
 
   setShowOtpModal(true);
   setTimer(60);
