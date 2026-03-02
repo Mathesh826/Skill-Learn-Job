@@ -5,7 +5,7 @@ import Loader from "./Loader";
 
 
 
-const LoginPanel = ({ isOpen, onClose }) => {
+const LoginPanel = ({ isOpen, onClose, startRegister }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
@@ -96,6 +96,13 @@ const LoginPanel = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (isRegister && nameRef.current) nameRef.current.focus();
   }, [isRegister]);
+
+
+  useEffect(() => {
+  if (startRegister) {
+    setIsRegister(true);
+  }
+}, [startRegister]);
 
   // ---------- ENTER KEY → NEXT INVALID FIELD ----------
   const handleEnterKey = (e) => {
