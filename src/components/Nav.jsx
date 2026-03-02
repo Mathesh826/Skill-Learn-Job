@@ -96,12 +96,6 @@ function Navbar() {
             </div>
           </li>
 
-          {/* THEME TOGGLE */}
-          <li className="theme-toggle" onClick={() =>
-            setTheme(theme === "dark" ? "light" : "dark")
-          }>
-            {theme === "dark" ? <FaSun /> : <FaMoon />}
-          </li>
 
         </ul>
       </nav>
