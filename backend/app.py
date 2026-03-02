@@ -4,34 +4,31 @@ import bcrypt
 import mysql.connector
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_mail import Mail, Message
-import random, time
-import traceback
+
 
 app = Flask(__name__)
 CORS(
     app,
-    resources={r"/*": {"origins": "*"}},
-    supports_credentials=True
+    supports_credentials=True,
+    origins=[
+        "https://mathesh-jobskill.vercel.app",
+        "http://localhost:5173"
+    ]
 )
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
-app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")   # ADD THIS
 
-
-mail = Mail(app)
-otp_store = {}
-
-
+@app.after_request
+def after_request(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+    return response
 
 
 
 # ======================================================
 # ✅ DATABASE CONNECTION (Railway / Render ENV variables)
-# ======================================================    
+# ======================================================
 
 def get_db():
     return mysql.connector.connect(
@@ -82,15 +79,6 @@ def register():
 
         conn.commit()
 
-        # ✅ SEND MAIL HERE (before return)
-        msg = Message(
-            "Welcome to SkillLearn 🎉",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[email]
-        )
-        msg.body = "Your account created successfully!"
-        mail.send(msg)
-
         return jsonify({"message": "User registered successfully"})
 
     except Exception as e:
@@ -99,6 +87,8 @@ def register():
     finally:
         cursor.close()
         conn.close()
+
+
 # ======================================================
 # ✅ USER LOGIN
 # ======================================================
@@ -356,48 +346,6 @@ def get_jobs():
 
     return jsonify(jobs)
 
-
-@app.route("/send-otp", methods=["POST"])
-def send_otp():
-    try:
-        data = request.get_json()
-        email = data["email"]
-
-        otp = str(random.randint(100000, 999999))
-        otp_store[email] = (otp, time.time() + 300)
-
-        msg = Message(
-            subject="SkillLearn OTP",
-            recipients=[email],
-            body=f"Your OTP: {otp}"
-        )
-
-        mail.send(msg)
-
-        print("OTP SENT SUCCESSFULLY")
-
-        return jsonify({"message": "OTP sent"})
-
-    except Exception as e:
-        print("OTP ERROR:", e)
-        traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/verify-otp", methods=["POST"])
-def verify_otp():
-    email = request.json["email"]
-    otp = request.json["otp"]
-
-    if email not in otp_store:
-        return {"success": False}, 400
-
-    saved, expiry = otp_store[email]
-
-    if time.time() > expiry or saved != otp:
-        return {"success": False}, 400
-
-    del otp_store[email]
-    return {"success": True}
 
 # ======================================================
 # ✅ RUN (Local only)

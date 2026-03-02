@@ -28,14 +28,6 @@ const LoginPanel = ({ isOpen, onClose }) => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
-  // ================= OTP STATES =================
-const [showOtpModal, setShowOtpModal] = useState(false);
-const [otp, setOtp] = useState("");
-const [emailVerified, setEmailVerified] = useState(false);
-const [timer, setTimer] = useState(60);
-const [canResend, setCanResend] = useState(false);
-// ==============================================
-
 
 
 
@@ -105,18 +97,6 @@ const [canResend, setCanResend] = useState(false);
     if (isRegister && nameRef.current) nameRef.current.focus();
   }, [isRegister]);
 
-  useEffect(() => {
-  let interval;
-
-  if (showOtpModal && timer > 0) {
-    interval = setInterval(() => setTimer((t) => t - 1), 1000);
-  }
-
-  if (timer === 0) setCanResend(true);
-
-  return () => clearInterval(interval);
-}, [showOtpModal, timer]);
-
   // ---------- ENTER KEY → NEXT INVALID FIELD ----------
   const handleEnterKey = (e) => {
     if (e.key !== "Enter") return;
@@ -160,7 +140,8 @@ const [canResend, setCanResend] = useState(false);
     !errors.password &&
     !errors.confirmPassword;
 
-  const canRegister = allFilled && noErrors && emailVerified;
+  const canRegister = allFilled && noErrors;
+
   // ---------- LOGIN BUTTON STATE ----------
   const canLogin = loginUsername && loginPassword;
 
@@ -219,59 +200,6 @@ const [canResend, setCanResend] = useState(false);
       }
     });
   };
-
-  const handleSendOtp = async () => {
-  if (errors.email || !email) return;
-
-  try {
-    const res = await fetch("https://skill-learn-job.onrender.com/send-otp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email })
-    });
-
-    const data = await res.json();
-
-    // ❌ backend error
-    if (!res.ok) {
-      errorToast(data.error || "OTP send failed");
-      return;
-    }
-
-    // ✅ success only here
-    setShowOtpModal(true);
-    setTimer(60);
-    setCanResend(false);
-
-    successToast("OTP sent");
-
-  } catch (err) {
-    errorToast("Server connection failed");
-  }
-};
-// VERIFY OTP
-const handleVerifyOtp = async () => {
-  const res = await fetch("https://skill-learn-job.onrender.com/verify-otp", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, otp }),
-  });
-
-  if (!res.ok) return errorToast("Wrong OTP");
-
-  setEmailVerified(true);
-  setShowOtpModal(false);
-
-  successToast("Email verified");
-};
-
-// RESEND
-const handleResendOtp = () => {
-  if (!canResend) return;
-  handleSendOtp();
-};
 
 
   // ---------- REGISTER SUBMIT ----------
@@ -361,29 +289,6 @@ const handleResendOtp = () => {
         }`}
       onKeyDown={handleEnterKey}
     >
-      {showOtpModal && (
-  <div className="otp-modal">
-    <div className="otp-box">
-      <h4>Enter OTP</h4>
-
-      <input
-        value={otp}
-        onChange={(e) => setOtp(e.target.value)}
-        placeholder="6 digit OTP"
-      />
-
-      <button onClick={handleVerifyOtp}>Verify</button>
-
-      <p>
-        {canResend ? (
-          <span onClick={handleResendOtp}>Resend OTP</span>
-        ) : (
-          `Resend in ${timer}s`
-        )}
-      </p>
-    </div>
-  </div>
-)}
       <div className="login-header">
         <h4>{isRegister ? "Create Account" : "Login"}</h4>
         <span className="close-btn" onClick={onClose}>
@@ -439,40 +344,26 @@ const handleResendOtp = () => {
               <p className="password-error">{errors.phone}</p>
             )}
 
-            {/* ===== EMAIL + OTP BUTTON ROW ===== */}
-<div className="email-row">
-  <input
-    id="email"
-    type="email"
-    placeholder="Email (example@gmail.com)"
-    value={email}
-    className={
-      touched.email
-        ? errors.email
-          ? "invalid-input"
-          : "valid-input"
-        : ""
-    }
-    onChange={(e) => {
-      handleField("email", e.target.value, validateEmail);
-      setEmailVerified(false);   // email change → verify reset
-    }}
-    onBlur={() => markTouched("email")}
-  />
-
-  <button
-    type="button"
-    className="otp-btn"
-    onClick={handleSendOtp}
-    disabled={errors.email || !email}
-  >
-    {emailVerified ? "✓ Verified" : "Get OTP"}
-  </button>
-</div>
-
-{touched.email && errors.email && (
-  <p className="password-error">{errors.email}</p>      
-)} 
+            <input
+              id="email"
+              type="email"
+              placeholder="Email (example@gmail.com)"
+              value={email}
+              className={
+                touched.email
+                  ? errors.email
+                    ? "invalid-input"
+                    : "valid-input"
+                  : ""
+              }
+              onChange={(e) =>
+                handleField("email", e.target.value, validateEmail)
+              }
+              onBlur={() => markTouched("email")}
+            />
+            {touched.email && errors.email && (
+              <p className="password-error">{errors.email}</p>
+            )}
 
             <input
               id="username"
