@@ -26,20 +26,18 @@ function Home() {
       logoutSound.volume = 0.15;
       logoutSound.play().catch(() => {});
 
-      Swal.fire({
-      icon: "success",
-      title: "Logout Successful",
-      text: "You have been logged out safely.",
-      toast: true,
-      position: "center",
-      timer: 2500,
-      showConfirmButton: false,
-      background: "white",
-      color: "black",
-      customClass: {
-        popup: "toast-glass"
-      }
-    });
+        Swal.fire({
+        icon: "success",
+        title: "Logout Successful",
+        text: "You have been logged out safely.",
+        toast: true,
+        position: "center",
+        timer: 2500,
+        showConfirmButton: false,
+        customClass: {
+          popup: "toast-glass"
+        }
+      });
 
       localStorage.removeItem("logout_success");
     }

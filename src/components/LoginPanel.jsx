@@ -156,7 +156,7 @@ const LoginPanel = ({ isOpen, onClose, startRegister }) => {
   const successToast = (msg) => {
     // 🔊 Toast sound
     const toastSound = new Audio("/sounds/magic.mp3");
-    toastSound.volume = 0.12;
+    toastSound.volume = 0.18;
     toastSound.play().catch(() => { });
 
     Swal.fire({

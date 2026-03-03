@@ -1122,3 +1122,36 @@ html, body, #root {
     font-size: 28px;
   }
 }
+
+
+/* Glass White Toast */
+.toast-glass {
+  background: rgba(255, 255, 255, 0.25) !important; /* white glass */
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 0 10px rgba(255, 255, 255, 0.2);
+
+  color: #222 !important; /* dark text for white bg */
+}
+
+/* Title */
+.toast-glass .swal2-title {
+  color: #111 !important;
+  font-weight: 600;
+}
+
+/* Text */
+.toast-glass .swal2-html-container {
+  color: #333 !important;
+}
+
+/* Success icon background soft */
+.toast-glass .swal2-success-ring {
+  border-color: rgba(0,0,0,0.1) !important;
+}
