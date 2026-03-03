@@ -1142,7 +1142,7 @@ html, body, #root {
 
 /* Title */
 .toast-glass .swal2-title {
-  color: #111 !important;
+  color: white !important;
   font-weight: 600;
 }
 
