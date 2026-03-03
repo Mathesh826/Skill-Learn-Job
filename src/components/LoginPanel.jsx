@@ -250,8 +250,11 @@ const LoginPanel = ({ isOpen, onClose, startRegister }) => {
   };
 
   // ---------- LOGIN SUBMIT ----------
-  const handleLogin = async () => {
+ const handleLogin = async () => {
   if (!canLogin) return;
+
+  // ✅ SHOW LOADER IMMEDIATELY
+  setShowLoader(true);
 
   try {
     const res = await fetch("https://skill-learn-job.onrender.com/login", {
@@ -265,29 +268,27 @@ const LoginPanel = ({ isOpen, onClose, startRegister }) => {
 
     const data = await res.json();
 
-    if (!res.ok) return errorToast(data.message || "Invalid credentials");
+    setShowLoader(false); // hide loader
 
-    // ✅ correct
+    if (!res.ok) {
+      errorToast(data.message || "Invalid credentials");
+      return;
+    }
+
     localStorage.setItem("user_id", data.user_id);
     localStorage.setItem("username", loginUsername);
 
     successToast("Login successful");
 
     setTimeout(() => {
-      setShowLoader(true);
-
-      setTimeout(() => {
-        window.location.href = "/userpage";
-      }, 5000);
-
-    }, 2000);
+      window.location.href = "/userpage";
+    }, 1500);
 
   } catch (err) {
-    console.log(err);
+    setShowLoader(false);
     errorToast("Server connection failed");
   }
 };
-
 
   // ---------- UI ----------
   return (
