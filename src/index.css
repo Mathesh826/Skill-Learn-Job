@@ -1155,3 +1155,373 @@ html, body, #root {
 .toast-glass .swal2-success-ring {
   border-color: rgba(0,0,0,0.1) !important;
 }
+
+
+/* =========================================
+   FINAL MOBILE RESPONSIVE PATCH
+   ADD AT END OF index.css
+========================================= */
+
+@media screen and (max-width: 768px) {
+
+  /* NAVBAR */
+  .navbar {
+    padding: 12px 15px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .nav-logo img {
+    height: 40px;
+    margin-left: 0;
+  }
+
+  .nav-links {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .accordion-content {
+    width: 220px;
+  }
+
+  /* SIDEBAR */
+  .side-bar {
+    width: 65px;
+  }
+
+  .side-item svg {
+    font-size: 22px;
+  }
+
+  .side-item span {
+    font-size: 9px;
+  }
+
+  /* HERO */
+  .split-hero {
+    margin-left: 65px;
+    width: calc(100% - 65px);
+    min-height: 450px;
+    padding: 20px;
+    justify-content: center;
+  }
+
+  .hero-content {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-text {
+    font-size: 32px;
+    line-height: 1.3;
+  }
+
+  .register-btn--2 {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  /* WHY SECTION */
+  .why-scroll-wrapper {
+    margin-left: 65px;
+  }
+
+  .why-title {
+    font-size: 24px;
+  }
+
+  .why-cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* SHOWCASE */
+  .auto-showcase {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .showcase-item h3 {
+    font-size: 22px;
+  }
+
+  .showcase-item span {
+    font-size: 16px;
+  }
+
+  /* SERVICES */
+  .services-wrapper {
+    margin-left: 65px;
+    padding: 50px 15px;
+  }
+
+  .services-title {
+    font-size: 24px;
+  }
+
+  .services-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .service-img {
+    height: 180px;
+  }
+
+  /* FOOTER */
+  .app-footer {
+    margin-left: 65px;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  /* LOGIN */
+  .login-panel {
+    left: 0;
+    width: 100%;
+  }
+
+  .login-panel.register-mode {
+    width: 100%;
+  }
+
+  .login-overlay {
+    left: 0;
+    width: 100%;
+  }
+
+  /* TOAST */
+  .toast-glass {
+    width: 90% !important;
+    max-width: 320px !important;
+  }
+}
+
+/* SMALL PHONES */
+
+@media screen and (max-width: 480px) {
+
+  .hero-text {
+    font-size: 24px;
+  }
+
+  .why-title,
+  .services-title {
+    font-size: 22px;
+  }
+
+  .why-card,
+  .service-card {
+    padding: 20px;
+  }
+
+  .showcase-item h3 {
+    font-size: 20px;
+  }
+
+  .showcase-item span {
+    font-size: 14px;
+  }
+
+  .service-img {
+    height: 160px;
+  }
+}
+
+
+/* =========================================
+   PREMIUM RESPONSIVE + CLEAN SPACING PATCH
+========================================= */
+
+@media (max-width: 768px) {
+
+  /* NAVBAR */
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  .nav-logo img {
+    height: 42px;
+    margin-left: 0;
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+
+  .nav-accordion {
+    font-size: 13px;
+  }
+
+  /* HERO */
+  .split-hero {
+    min-height: 100vh;
+    padding: 40px 25px;
+  }
+
+  .hero-content {
+    gap: 30px;
+  }
+
+  .hero-text {
+    font-size: 34px;
+    line-height: 1.4;
+    max-width: 95%;
+  }
+
+  .register-btn--2 {
+    padding: 14px 30px;
+  }
+
+  /* WHY SECTION */
+
+  .why-scroll-wrapper {
+    padding: 70px 20px;
+  }
+
+  .why-scroll-container {
+    padding: 0;
+  }
+
+  .why-title {
+    margin-bottom: 40px;
+  }
+
+  .why-cards {
+    gap: 24px;
+  }
+
+  .why-card {
+    padding: 24px;
+  }
+
+  .why-card h4 {
+    margin-bottom: 12px;
+  }
+
+  .why-card p {
+    line-height: 1.8;
+  }
+
+  /* SHOWCASE */
+
+  .auto-showcase {
+    padding: 30px 20px;
+    gap: 30px;
+  }
+
+  .showcase-item {
+    gap: 6px;
+  }
+
+  /* SERVICES */
+
+  .services-wrapper {
+    padding: 70px 20px;
+  }
+
+  .services-title {
+    margin-bottom: 40px;
+  }
+
+  .services-cards {
+    gap: 24px;
+  }
+
+  .service-card {
+    padding: 24px;
+  }
+
+  .service-img {
+    height: 200px;
+    margin-bottom: 16px;
+  }
+
+  .service-card p {
+    line-height: 1.8;
+  }
+
+  /* FOOTER */
+
+  .app-footer {
+    padding-top: 50px;
+  }
+
+  .footer-container {
+    padding: 0 25px 35px;
+    gap: 35px;
+  }
+
+  .footer-section h3,
+  .footer-section h4 {
+    margin-bottom: 16px;
+  }
+
+  .footer-section li {
+    margin-bottom: 12px;
+  }
+
+  /* LOGIN PANEL */
+
+  .login-header {
+    padding: 20px;
+  }
+
+  .login-body {
+    padding: 25px 20px;
+    gap: 16px;
+  }
+
+  .login-body input {
+    height: 48px;
+  }
+
+  .login-btn,
+  .register-btn {
+    height: 48px;
+  }
+}
+
+
+/* EXTRA SMALL DEVICES */
+
+@media (max-width: 480px) {
+
+  .hero-text {
+    font-size: 28px;
+    line-height: 1.5;
+  }
+
+  .why-title,
+  .services-title {
+    font-size: 22px;
+  }
+
+  .why-card,
+  .service-card {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .service-img {
+    height: 170px;
+  }
+
+  .showcase-item h3 {
+    font-size: 22px;
+  }
+
+  .showcase-item span {
+    font-size: 15px;
+  }
+
+  .footer-container {
+    text-align: center;
+  }
+}
